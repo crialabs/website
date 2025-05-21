@@ -1,22 +1,22 @@
 import { PrismaAdapter as _PrismaAdapter } from '@next-auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
-let prisma;
+let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === 'production') {
   prisma = new PrismaClient();
 } else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
+  if (!(global as any).prisma) {
+    (global as any).prisma = new PrismaClient();
   }
-  prisma = global.prisma;
+  prisma = (global as any).prisma;
 }
 
 // @NOTE: this is module extension
 // required to alter prisma adapter
-export const PrismaAdapter = (p) => ({
+export const PrismaAdapter = (p: PrismaClient) => ({
   ..._PrismaAdapter(p),
-  getUser: (id) =>
+  getUser: (id: string) =>
     p.user.findUnique({
       where: { id: +id },
       select: {

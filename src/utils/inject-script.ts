@@ -1,4 +1,4 @@
-export const injectScript = (src) =>
+export const injectScript = (src: string): Promise<void> =>
   new Promise((resolve, reject) => {
     const existScript = document.head.querySelector(`script[src="${src}"]`);
 

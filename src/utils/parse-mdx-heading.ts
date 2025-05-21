@@ -1,4 +1,4 @@
-function parseMDXHeading(line) {
+function parseMDXHeading(line: string): [number | null, string] | [] {
   if (typeof line !== 'string') {
     console.error('Invalid input to parseMDXHeading:', line);
     return [];
@@ -26,4 +26,4 @@ function parseMDXHeading(line) {
   return [];
 }
 
-module.exports = parseMDXHeading;
+export default parseMDXHeading;
