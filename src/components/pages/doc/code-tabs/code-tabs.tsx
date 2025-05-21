@@ -1,12 +1,17 @@
 'use client';
 
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import React, { Fragment, useState, useMemo, useContext, useEffect } from 'react';
 
 import { ActiveLabelContext } from './CodeTabsContext';
 
-const CodeTabs = ({ children = null, labels = [], reverse = false }) => {
+interface CodeTabsProps {
+  children?: React.ReactNode;
+  labels?: string[];
+  reverse?: boolean;
+}
+
+const CodeTabs: React.FC<CodeTabsProps> = ({ children = null, labels = [], reverse = false }) => {
   const { activeLabel, setActiveLabel } = useContext(ActiveLabelContext);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -25,7 +30,7 @@ const CodeTabs = ({ children = null, labels = [], reverse = false }) => {
     [children, reverse]
   );
 
-  const handleTabClick = (index) => {
+  const handleTabClick = (index: number) => {
     const label = labels[index];
     setCurrentIndex(index);
     setActiveLabel(label);
@@ -43,7 +48,7 @@ const CodeTabs = ({ children = null, labels = [], reverse = false }) => {
                 : 'border-transparent text-gray-new-40 dark:text-gray-7'
             )}
             key={`lb-${index}`}
-            tabIndex="0"
+            tabIndex={0}
             role="button"
             onClick={() => handleTabClick(index)}
             onKeyDown={() => handleTabClick(index)}
@@ -58,15 +63,6 @@ const CodeTabs = ({ children = null, labels = [], reverse = false }) => {
       })}
     </figure>
   );
-};
-
-CodeTabs.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.arrayOf(PropTypes.object),
-  ]),
-  labels: PropTypes.arrayOf(PropTypes.string),
-  reverse: PropTypes.bool,
 };
 
 export default CodeTabs;

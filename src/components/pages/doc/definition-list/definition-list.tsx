@@ -1,31 +1,34 @@
-import PropTypes from 'prop-types';
-import React, { Fragment } from 'react';
+import React, { Fragment, ReactNode } from 'react';
 import slugify from 'slugify';
 
 import AnchorIcon from 'icons/anchor.inline.svg';
-// local constants
+
+interface DefinitionListProps {
+  bulletType?: 'dash' | 'check' | 'x';
+  children: ReactNode;
+}
+
 const termDelimiterRegEx = /\n/;
 const listDelimiterRegEx = /\n:/;
 const termDelimiterVariations = ['\n', '\n ', ' \n'];
 const listDelimiterVariations = ['\n:', ' \n:', '\n: '];
-// local helpers
-const checkStrNonEmpty = (str) => str && str.trim().length > 0;
-const getPlainText = (arr) => arr.reduce((acc, cur) => acc.concat(cur.props?.children ?? cur), '');
 
-const buildRenderContent = ({ delimiterRegEx, delimiterVariations }, jsx) => {
-  // 1. Content is a plain string
-  // just split it using list delimiter
+const checkStrNonEmpty = (str: string) => str && str.trim().length > 0;
+const getPlainText = (arr: ReactNode[]) =>
+  arr.reduce((acc, cur) => acc.concat((cur as any).props?.children ?? cur), '');
+
+const buildRenderContent = (
+  { delimiterRegEx, delimiterVariations }: { delimiterRegEx: RegExp; delimiterVariations: string[] },
+  jsx: ReactNode
+) => {
   if (typeof jsx === 'string') {
     return jsx.split(delimiterRegEx);
   }
-  // 2. If compound content
-  // init content store
-  const store = [];
-  // init pointer
+
+  const store: ReactNode[][] = [];
   let pointer = 0;
-  // init loop
-  jsx.forEach((item) => {
-    // make sure nested store is initialized
+
+  (jsx as ReactNode[]).forEach((item) => {
     store[pointer] = store[pointer] || [];
     if (typeof item === 'string') {
       if (delimiterRegEx.test(item)) {
@@ -53,14 +56,13 @@ const buildRenderContent = ({ delimiterRegEx, delimiterVariations }, jsx) => {
       store[pointer].push(item);
     }
   });
+
   return store;
 };
 
-const DefinitionList = ({ bulletType = 'dash', children }) => {
-  let content = children;
-  if (!Array.isArray(children)) {
-    content = [children];
-  }
+const DefinitionList: React.FC<DefinitionListProps> = ({ bulletType = 'dash', children }) => {
+  let content = React.Children.toArray(children);
+
   return (
     <dl>
       {content.map(({ props: { children } }, idx) => {
@@ -86,7 +88,7 @@ const DefinitionList = ({ bulletType = 'dash', children }) => {
               return (
                 <dt
                   className="group relative mt-4 flex items-start font-bold first:mt-0"
-                  id={!termIdx ? anchorMold : termIdx}
+                  id={!termIdx ? anchorMold : termIdx.toString()}
                   key={termIdx}
                 >
                   <span className="mr-2.5">
@@ -114,11 +116,6 @@ const DefinitionList = ({ bulletType = 'dash', children }) => {
       })}
     </dl>
   );
-};
-
-DefinitionList.propTypes = {
-  bulletType: PropTypes.oneOf(['dash', 'check', 'x']),
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 };
 
 export default DefinitionList;

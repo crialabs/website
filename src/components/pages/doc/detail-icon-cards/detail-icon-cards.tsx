@@ -1,7 +1,5 @@
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import React from 'react';
-
+import React, { ReactNode } from 'react';
 import Link from 'components/shared/link/link';
 
 import AChart from './images/a-chart.inline.svg';
@@ -160,7 +158,12 @@ const icons = {
 
 const monochromeIcons = ['github'];
 
-const DetailIconCards = ({ children = null, withNumbers = false }) => {
+interface DetailIconCardsProps {
+  children?: ReactNode;
+  withNumbers?: boolean;
+}
+
+const DetailIconCards: React.FC<DetailIconCardsProps> = ({ children = null, withNumbers = false }) => {
   const ListComponent = withNumbers ? 'ol' : 'ul';
 
   return (
@@ -226,11 +229,6 @@ const DetailIconCards = ({ children = null, withNumbers = false }) => {
       })}
     </ListComponent>
   );
-};
-
-DetailIconCards.propTypes = {
-  children: PropTypes.node,
-  withNumbers: PropTypes.bool,
 };
 
 export default DetailIconCards;

@@ -1,6 +1,4 @@
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
-
 import Link from 'components/shared/link';
 import LINKS from 'constants/links';
 import DiscordIcon from 'icons/chat-options/discord.inline.svg';
@@ -8,7 +6,15 @@ import GithubIcon from 'icons/chat-options/github.inline.svg';
 import NeonIcon from 'icons/chat-options/neon.inline.svg';
 import VSCodeIcon from 'icons/chat-options/vscode.inline.svg';
 
-const ITEMS = [
+interface ChatOptionItem {
+  title: string;
+  icon: React.ElementType;
+  link: string;
+  isExternal?: boolean;
+  className?: string;
+}
+
+const ITEMS: ChatOptionItem[] = [
   {
     title: 'Docs',
     icon: NeonIcon,
@@ -49,7 +55,11 @@ const themeClassNames = {
   },
 };
 
-const ChatOptions = ({ isSidebar = false }) => {
+interface ChatOptionsProps {
+  isSidebar?: boolean;
+}
+
+const ChatOptions: React.FC<ChatOptionsProps> = ({ isSidebar = false }) => {
   const TitleTag = isSidebar ? 'h3' : 'h2';
   const theme = isSidebar ? 'sidebar' : 'default';
   const classNames = themeClassNames[theme];
@@ -93,10 +103,6 @@ const ChatOptions = ({ isSidebar = false }) => {
       </ul>
     </div>
   );
-};
-
-ChatOptions.propTypes = {
-  isSidebar: PropTypes.bool,
 };
 
 export default ChatOptions;

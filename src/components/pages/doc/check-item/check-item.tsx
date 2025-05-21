@@ -1,13 +1,21 @@
 'use client';
 
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import React from 'react';
 import slugify from 'slugify';
 
 import Link from 'components/shared/link';
 
-const CheckItem = ({ title, href, children, checklist = [], onToggle, ...otherProps }) => {
+interface CheckItemProps {
+  title: string;
+  href?: string;
+  children: React.ReactNode;
+  checklist: string[];
+  onToggle: (id: string) => void;
+  [key: string]: any;
+}
+
+const CheckItem: React.FC<CheckItemProps> = ({ title, href, children, checklist = [], onToggle, ...otherProps }) => {
   const id = slugify(title, {
     lower: true,
     strict: true,
@@ -45,14 +53,6 @@ const CheckItem = ({ title, href, children, checklist = [], onToggle, ...otherPr
       </div>
     </li>
   );
-};
-
-CheckItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  href: PropTypes.string,
-  children: PropTypes.node.isRequired,
-  checklist: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onToggle: PropTypes.func.isRequired,
 };
 
 export default CheckItem;

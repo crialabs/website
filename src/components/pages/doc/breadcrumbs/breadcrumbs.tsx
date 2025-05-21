@@ -1,13 +1,21 @@
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { Fragment } from 'react';
-
 import Link from 'components/shared/link';
 import { DOCS_BASE_PATH, POSTGRESQL_BASE_PATH } from 'constants/docs';
 
 const linkClassName = 'transition-colors duration-200 hover:text-black dark:hover:text-white';
 
-const Breadcrumbs = ({ breadcrumbs, isPostgresPost = false }) => (
+interface Breadcrumb {
+  title: string;
+  slug?: string;
+}
+
+interface BreadcrumbsProps {
+  breadcrumbs: Breadcrumb[];
+  isPostgresPost?: boolean;
+}
+
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ breadcrumbs, isPostgresPost = false }) => (
   <div className="mb-4 flex flex-wrap space-x-2 text-sm leading-normal text-gray-new-40 dark:text-gray-new-60 lg:hidden">
     {isPostgresPost ? (
       <Link className={linkClassName} to={POSTGRESQL_BASE_PATH}>
@@ -47,15 +55,5 @@ const Breadcrumbs = ({ breadcrumbs, isPostgresPost = false }) => (
     })}
   </div>
 );
-
-Breadcrumbs.propTypes = {
-  breadcrumbs: PropTypes.arrayOf(
-    PropTypes.exact({
-      title: PropTypes.string.isRequired,
-      slug: PropTypes.string,
-    })
-  ).isRequired,
-  isPostgresPost: PropTypes.bool,
-};
 
 export default Breadcrumbs;

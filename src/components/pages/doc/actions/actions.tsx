@@ -2,15 +2,20 @@
 
 import clsx from 'clsx';
 import copyToClipboard from 'copy-to-clipboard';
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-
 import Link from 'components/shared/link';
 import ChatGptIcon from 'icons/docs/chat-gpt.inline.svg';
 import MarkdownIcon from 'icons/docs/markdown.inline.svg';
 import GitHubIcon from 'icons/github.inline.svg';
+import { useState } from 'react';
 
-const ActionItem = ({ icon: Icon, text, url, onClick }) => {
+interface ActionItemProps {
+  icon: React.ElementType;
+  text: string;
+  url?: string;
+  onClick?: () => void;
+}
+
+const ActionItem: React.FC<ActionItemProps> = ({ icon: Icon, text, url, onClick }) => {
   const Tag = url ? Link : 'button';
 
   return (
@@ -32,15 +37,12 @@ const ActionItem = ({ icon: Icon, text, url, onClick }) => {
   );
 };
 
-ActionItem.propTypes = {
-  icon: PropTypes.elementType.isRequired,
-  text: PropTypes.string.isRequired,
-  url: PropTypes.string,
-  onClick: PropTypes.func,
-};
+interface CopyMarkdownButtonProps {
+  rawFileLink: string;
+}
 
-const CopyMarkdownButton = ({ rawFileLink }) => {
-  const [status, setStatus] = useState('default'); // 'default' | 'copied' | 'failed'
+const CopyMarkdownButton: React.FC<CopyMarkdownButtonProps> = ({ rawFileLink }) => {
+  const [status, setStatus] = useState<'default' | 'copied' | 'failed'>('default');
 
   const getButtonText = () => {
     if (status === 'failed') return 'Failed to copy';
@@ -74,18 +76,17 @@ const CopyMarkdownButton = ({ rawFileLink }) => {
   );
 };
 
-CopyMarkdownButton.propTypes = {
-  rawFileLink: PropTypes.string.isRequired,
-};
+interface ActionsProps {
+  githubPath: string;
+  withBorder?: boolean;
+}
 
-const Actions = ({ githubPath, withBorder = false }) => {
+const Actions: React.FC<ActionsProps> = ({ githubPath, withBorder = false }) => {
   const githubBase = process.env.NEXT_PUBLIC_GITHUB_PATH;
   const githubRawBase = process.env.NEXT_PUBLIC_GITHUB_RAW_PATH;
 
-  // TODO: remove later once everyone has the new env variables
   if (!githubBase || !githubRawBase) {
     if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
       console.log('Missing NEXT_PUBLIC_GITHUB_PATH or NEXT_PUBLIC_GITHUB_RAW_PATH env variable.');
     }
     return null;
@@ -107,11 +108,6 @@ const Actions = ({ githubPath, withBorder = false }) => {
       <ActionItem icon={ChatGptIcon} text="Open in ChatGPT" url={chatGptLink} />
     </div>
   );
-};
-
-Actions.propTypes = {
-  githubPath: PropTypes.string.isRequired,
-  withBorder: PropTypes.bool,
 };
 
 export default Actions;

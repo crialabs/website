@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import PropTypes from 'prop-types';
+import { ReactNode } from 'react';
 
 import Button from 'components/shared/button';
 
@@ -12,7 +12,14 @@ const logos = {
   discord: discordLogo,
 };
 
-const CommunityBanner = ({ buttonText, buttonUrl, children = null, logo }) => (
+interface CommunityBannerProps {
+  buttonText: string;
+  buttonUrl: string;
+  children?: ReactNode;
+  logo: keyof typeof logos;
+}
+
+const CommunityBanner = ({ buttonText, buttonUrl, children = null, logo }: CommunityBannerProps) => (
   <section className="not-prose relative my-10">
     <span className="absolute -inset-px block rounded-[10px] bg-[linear-gradient(90deg,rgba(48,50,54,1)50%,rgba(0,229,153,0.4)100%)]" />
     <span className="absolute -top-px right-1.5 h-px w-[28%] bg-[radial-gradient(circle,rgba(0,229,153,0.7)0%,rgba(0,229,153,0.05)100%)] sm:hidden" />
@@ -51,12 +58,5 @@ const CommunityBanner = ({ buttonText, buttonUrl, children = null, logo }) => (
     </div>
   </section>
 );
-
-CommunityBanner.propTypes = {
-  children: PropTypes.node,
-  buttonText: PropTypes.string.isRequired,
-  buttonUrl: PropTypes.string.isRequired,
-  logo: PropTypes.oneOf(Object.keys(logos)).isRequired,
-};
 
 export default CommunityBanner;

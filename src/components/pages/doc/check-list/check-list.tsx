@@ -2,13 +2,17 @@
 
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
-import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import slugify from 'slugify';
 
 import useLocalStorage from 'hooks/use-local-storage';
 
-const CheckList = ({ title, children }) => {
+interface CheckListProps {
+  title?: string;
+  children: React.ReactNode;
+}
+
+const CheckList: React.FC<CheckListProps> = ({ title, children }) => {
   const id =
     title &&
     slugify(title, {
@@ -18,22 +22,22 @@ const CheckList = ({ title, children }) => {
     }).replace(/_/g, '');
 
   const pathname = usePathname();
-  const slug = pathname.split('/').pop();
+  const slug = pathname.split('/').pop() || '';
   const checkListId = id || slug;
   const [mounted, setMounted] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [checklist, setChecklist] = useLocalStorage(`checklist-${checkListId}`, []);
+  const [checklist, setChecklist] = useLocalStorage<string[]>(`checklist-${checkListId}`, []);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    setProgress(Math.round((checklist.length / children.length) * 100));
+    setProgress(Math.round((checklist.length / React.Children.count(children)) * 100));
   }, [checklist, children]);
 
   const handleToggle = useCallback(
-    (id) => {
+    (id: string) => {
       setChecklist((prev = []) => {
         if (prev.includes(id)) {
           return prev.filter((itemId) => itemId !== id);
@@ -83,11 +87,6 @@ const CheckList = ({ title, children }) => {
       </ul>
     </div>
   );
-};
-
-CheckList.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.node.isRequired,
 };
 
 export default CheckList;

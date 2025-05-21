@@ -1,12 +1,19 @@
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
-
 import Actions from 'components/pages/doc/actions';
 import ChatOptions from 'components/pages/doc/chat-options';
 import ChangelogForm from 'components/shared/changelog-form';
 import TableOfContents from 'components/shared/table-of-contents';
 
-const Aside = ({
+interface AsideProps {
+  isUseCase?: boolean;
+  isDocsIndex?: boolean;
+  isChangelog?: boolean;
+  enableTableOfContents?: boolean;
+  tableOfContents?: any[];
+  githubPath?: string;
+}
+
+const Aside: React.FC<AsideProps> = ({
   isUseCase,
   isDocsIndex,
   isChangelog,
@@ -40,12 +47,4 @@ const Aside = ({
   </div>
 );
 
-Aside.propTypes = {
-  isUseCase: PropTypes.bool,
-  isDocsIndex: PropTypes.bool,
-  isChangelog: PropTypes.bool,
-  enableTableOfContents: PropTypes.bool,
-  tableOfContents: PropTypes.array,
-  githubPath: PropTypes.string,
-};
 export default Aside;
